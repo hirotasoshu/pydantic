@@ -19,6 +19,7 @@ from pydantic._internal._utils import (
     ClassAttribute,
     ValueItems,
     all_identical,
+    classproperty,
     deep_update,
     lenient_issubclass,
     smart_deepcopy,
@@ -376,6 +377,21 @@ def test_class_attribute():
     f = Foo()
     f.attr = 'not foo'
     assert f.attr == 'not foo'
+
+
+def test_class_property():
+    class A:
+        @classproperty
+        def x(cls) -> str:
+            return 'foo'
+
+    assert A.x == A().x == 'foo'
+    assert type(A.x) == type(A().x)
+
+    a = A()
+    a.x = 'not foo'
+
+    assert a.x == 'not foo'
 
 
 def test_all_literal_values():
