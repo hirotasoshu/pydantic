@@ -26,7 +26,7 @@ from ._generics import PydanticGenericMetadata, get_model_typevars_map
 from ._mock_val_ser import MockValSer, set_model_mocks
 from ._schema_generation_shared import CallbackGetCoreSchemaHandler
 from ._typing_extra import get_cls_types_namespace, is_annotated, is_classvar, parent_frame_namespace
-from ._utils import ClassAttribute, SafeGetItemProxy
+from ._utils import ClassAttribute, SafeGetItemProxy, classproperty
 from ._validate_call import ValidateCallWrapper
 
 if typing.TYPE_CHECKING:
@@ -241,13 +241,13 @@ class ModelMetaclass(ABCMeta):
                 private_attributes.update(base.__private_attributes__)
         return field_names, class_vars, private_attributes
 
-    @property
+    @classproperty
     @deprecated(
         'The `__fields__` attribute is deprecated, use `model_fields` instead.', category=PydanticDeprecatedSince20
     )
-    def __fields__(self) -> dict[str, FieldInfo]:
+    def __fields__(cls) -> dict[str, FieldInfo]:
         warnings.warn('The `__fields__` attribute is deprecated, use `model_fields` instead.', DeprecationWarning)
-        return self.model_fields  # type: ignore
+        return cls.model_fields  # type: ignore
 
     def __dir__(self) -> list[str]:
         attributes = list(super().__dir__())

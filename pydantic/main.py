@@ -983,13 +983,13 @@ class BaseModel(metaclass=_model_construction.ModelMetaclass):
         return self.__repr_str__(' ')
 
     # ##### Deprecated methods from v1 #####
-    @property
+    @_utils.classproperty
     @typing_extensions.deprecated(
         'The `__fields__` attribute is deprecated, use `model_fields` instead.', category=PydanticDeprecatedSince20
     )
-    def __fields__(self) -> dict[str, FieldInfo]:
+    def __fields__(cls) -> dict[str, FieldInfo]:
         warnings.warn('The `__fields__` attribute is deprecated, use `model_fields` instead.', DeprecationWarning)
-        return self.model_fields
+        return cls.model_fields
 
     @property
     @typing_extensions.deprecated(
