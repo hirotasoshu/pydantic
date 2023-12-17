@@ -360,3 +360,12 @@ class SafeGetItemProxy:
 
         def __contains__(self, __key: str) -> bool:
             return self.wrapped.__contains__(__key)
+
+
+PropReturn = TypeVar('PropReturn')
+
+
+def classproperty(meth: typing.Callable[..., PropReturn]) -> PropReturn:
+    """Access a @classmethod like a @property."""
+    # mypy doesn't understand class properties yet: https://github.com/python/mypy/issues/2563
+    return classmethod(property(meth))  # type: ignore
